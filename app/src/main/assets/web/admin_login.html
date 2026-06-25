@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - SIMIDA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* 1. Mengganti Background Seluruh Halaman Menjadi Maroon */
+        body {
+            background-color: maroon; /* Atau gunakan #800000 */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 2. Styling Kotak Login Putih di Tengah Halaman */
+        .login-box {
+            background-color: white;
+            width: 100%;
+            max-width: 380px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* 3. Styling Judul Berwarna Maroon */
+        .login-box h2 {
+            color: maroon;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        /* 4. Styling Input Group */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Agar padding tidak merusak lebar */
+        }
+
+        /* 5. Styling Tombol Login Maroon */
+        .btn-admin {
+            width: 100%;
+            padding: 12px;
+            background-color: maroon;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-admin:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Login Admin SIMIDA</h2>
+
+    <div class="input-group">
+        <input type="text" id="username" placeholder="Username Admin">
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" placeholder="Password Admin">
+    </div>
+
+    <button onclick="cekLogin()" class="btn-admin">
+        <i class="fa-solid fa-user-lock"></i> Masuk Sebagai Admin
+    </button>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="LoginUser.html" style="color: #555; font-size: 13px; text-decoration: none; font-weight: bold;">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Login User
+        </a>
+    </div>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Barang - SIMIDA</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        .sidebar ul li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .action-group {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-card {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #4a0404;
+            font-size: 14px;
+        }
+
+        .input-control {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .btn {
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-maroon { background-color: maroon; }
+        .btn-maroon:hover { background-color: #570000; }
+        .btn-dark { background-color: #555; }
+        .btn-dark:hover { background-color: #333; }
+        .btn-pdf { background-color: #e74c3c; }
+        .btn-pdf:hover { background-color: #c0392b; }
+
+        /* ========================================== */
+        /* CSS KHUSUS PRINT - JIKA DI-EXPORT KE PDF    */
+        /* ========================================== */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-family: 'Segoe UI', sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            /* Sembunyikan elemen dashboard, sidebar, form, dan tombol aksi */
+            .sidebar, .topbar, .form-card, .action-group, hr, .btn-print, .btn-hapus {
+                display: none !important;
+            }
+            .main {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .table-container {
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+                text-align: left !important;
+                color: black !important;
+            }
+            th {
+                background-color: #eee !important;
+                font-weight: bold !important;
+            }
+            /* Tampilkan judul laporan khusus saat dicetak */
+            .print-header {
+                display: block !important;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Sembunyikan judul cetak di layar komputer biasa */
+        .print-header {
+            display: none;
+        }
+
+        .btn-maroon { background-color: maroon; }
+        .btn-maroon:hover { background-color: #570000; }
+        .btn-dark { background-color: #555; }
+        .btn-dark:hover { background-color: #333; }
+        .btn-pdf { background-color: #e74c3c; }
+        .btn-pdf:hover { background-color: #c0392b; }
+
+        /* =================================================== */
+        /* TAMBAHKAN CSS KHUSUS INI DI PALING BAWAH TAG STYLE  */
+        /* =================================================== */
+        @media print {
+            /* Sembunyikan semua elemen navigasi, tombol, dan form input saat dicetak */
+            .sidebar, .topbar, .form-card, .action-group, hr, th:nth-child(4), td:nth-child(4) {
+                display: none !important;
+            }
+            /* Lebarkan kontainer utama agar memenuhi kertas A4 */
+            .main {
+                margin-left: 0 !important;
+                padding: 10px !important;
+                width: 100% !important;
+            }
+            /* Buat tabel menjadi hitam putih rapi standar dokumen */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+                color: #000 !important;
+            }
+            th {
+                background-color: #f2f2f2 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<script>
+    if (localStorage.getItem("theme") === "dark"){
+        document.body.classList.add("dark-mode");
+    }
+</script>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <img src="logo%20desa%20dayeuhkolot.png" alt="Logo Desa" class="brand-logo">
+        <span class="brand-text">SIMIDA</span>
+    </div>
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 5px 20px 15px 20px;">
+    <ul>
+        <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="barang.html" class="active"><i class="fa-solid fa-box"></i> Data Barang</a></li>
+        <li><a href="peminjaman.html"><i class="fa-solid fa-clipboard-list"></i> Peminjaman</a></li>
+        <li><a href="laporan.html"><i class="fa-solid fa-chart-simple"></i> Laporan</a></li>
+        <li class="logout-item"><a href="#" onclick="logout(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+</div>
+
+<div class="main">
+    <div class="print-header">
+        <h2 style="margin: 0; color: maroon;">SIMIDA INVENTARIS</h2>
+        <p style="margin: 5px 0 0 0; color: #555; font-size: 14px;">Laporan Data Barang Inventaris Desa Dayeuhkolot</p>
+        <hr style="border: 0; border-top: 2px solid #000; margin-top: 10px; display: block !important;">
+    </div>
+
+    <div class="topbar">
+        <h2>Data Barang Inventaris</h2>
+    </div>
+
+    <div id="formTambahBarang" class="form-card">
+        <h3 style="color: maroon; margin-top: 0; margin-bottom: 15px;"><i class="fa-solid fa-box-open"></i> Input Barang Baru</h3>
+        <div class="input-group">
+            <label for="namaBarang">Nama Barang</label>
+            <input type="text" id="namaBarang" class="input-control" placeholder="Masukkan nama barang">
+        </div>
+        <div class="input-group">
+            <label for="barcodeBarang">Kode Barcode</label>
+            <input type="text" id="barcodeBarang" class="input-control" placeholder="Scan / Ketik Kode Barcode (Contoh: BRG001)">
+        </div>
+        <div class="input-group">
+            <label for="stokBarang">Jumlah Stok</label>
+
+            <input type="number" id="stokBarang" class="input-control" value="1" min="1" placeholder="Contoh: 5">
+        </div>
+        <div class="input-group">
+            <label>Kondisi Barang</label>
+            <select id="kondisiBarang" class="input-control">
+                <option>Baik</option>
+                <option>Rusak Ringan</option>
+                <option>Rusak Berat</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Lokasi Barang</label>
+            <input type="text"
+                   id="lokasiBarang"
+                   class="input-control"
+                   placeholder="Contoh: Aula Desa">
+        </div>
+
+        <div class="input-group">
+            <label>Tahun Perolehan</label>
+            <input type="number"
+                   id="tahunBarang"
+                   class="input-control"
+                   placeholder="2025">
+        </div>
+
+        <div class="input-group">
+            <label>Keterangan</label>
+            <textarea id="keteranganBarang"
+                      class="input-control"
+                      rows="3"></textarea>
+        </div>
+        <button class="btn btn-maroon" onclick="tambahBarang()">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan ke Database
+        </button>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0 20px 0;">
+
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <input type="text" placeholder="Cari barang...">
+        </div>
+
+        <div class="toolbar-right">
+            <button onclick="toggleFormInput()">+ Tambah Barang</button>
+
+            <button onclick="exportPDF()">Export PDF</button>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Barang</th>
+                <th>Kode Barcode</th>
+                <th>Jumlah</th>
+                <th>Kondisi</th>
+                <th class="btn-print">Aksi</th>
+            </tr>
+            </thead>
+            <tbody id="tableBarang"></tbody>
+        </table>
+    </div>
+</div>
+<button class="fab" onclick="openModal()">
+    +
+</button>
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        renderTable();
+    });
+</script>
+<script src="app.js"></script>
+</body>
+</html>

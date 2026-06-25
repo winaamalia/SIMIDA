@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengajuan Peminjaman - SIMIDA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <img src="logo%20desa%20dayeuhkolot.png" alt="Logo Desa" class="brand-logo" style="width: 40px; border-radius: 50%;">
+        <span class="brand-text" style="margin-left: 10px; font-weight: bold; color: white;">SIMIDA</span>
+    </div>
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 15px 20px;">
+    <ul>
+        <li><a href="pengajuan_user.html" class="active"><i class="fa-solid fa-file-invoice"></i> Pengajuan</a></li>
+        <li class="logout-item">
+            <a href="#" onclick="logout();"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </li>
+    </ul>
+</div>
+
+<div class="main">
+    <div class="topbar"><h2>Formulir Pengajuan Peminjaman</h2></div>
+
+    <div class="form-container" style="background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 20px;">
+        <div style="margin-bottom: 15px;">
+            <label>Nama Lengkap</label>
+            <input type="text" id="namaUser" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label>Nama/Kode Barang</label>
+            <input type="text" id="barangPinjam" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+        <button id="btnScan" onclick="mulaiScanKamera()" style="background: #2c3e50; color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+            <i class="fa-solid fa-camera"></i> Scan Barcode
+        </button>
+        <div id="reader" style="display:none; width: 300px; margin: 10px 0;"></div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Rencana Tanggal & Jam AMBIL</label>
+            <input type="datetime-local" id="waktuMulaiUser" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label>Rencana Tanggal & Jam KEMBALI</label>
+            <input type="datetime-local" id="waktuKembaliUser" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        </div>
+        <button onclick="kirimFormUser()" style="background: #800000; color: white; padding: 12px; width: 100%; border: none; border-radius: 5px; font-weight: bold;">
+            Kirim Pengajuan
+        </button>
+    </div>
+
+    <div class="table-container" style="margin: 20px; background: white; padding: 20px; border-radius: 10px;">
+        <h3>Riwayat Pengajuan</h3>
+        <table class="table">
+            <thead>
+            <tr >
+                <th style="padding: 12px;">No</th>
+                <th>Barang</th>
+                <th>Jadwal Ambil</th>
+                <th>Jadwal Kembali</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="tableRiwayatUser"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+    function logout() {
+        if (confirm("Yakin ingin keluar?")) {
+            localStorage.removeItem("sessionRole");
+            window.location.href = "LoginUser.html";
+        }
+    }
+function kirimFormUser() {
+    const nama = document.getElementById("namaUser").value.trim();
+    const barang = document.getElementById("barangPinjam").value.trim();
+    const tglMulai = document.getElementById("waktuMulaiUser").value;
+    const tglKembali = document.getElementById("waktuKembaliUser").value;
+
+    if (!nama || !barang || !tglMulai || !tglKembali) {
+        Swal.fire("Data belum lengkap");
+        return;
+    }
+    const data = JSON.parse(localStorage.getItem("peminjaman")) || [];
+
+data.push({
+    nama,
+    barang,
+    tglPinjam: tglMulai,
+    tglKembali: tglKembali,
+    status: "MENUNGGU",
+    log: []
+});
+
+localStorage.setItem("peminjaman", JSON.stringify(data));
+addNotification("User mengirim pengajuan peminjaman");
+
+renderRiwayatUserTable();
+
+    // reset FORM HARUS DI DALAM FUNCTION
+    document.getElementById("namaUser").value = "";
+    document.getElementById("barangPinjam").value = "";
+    document.getElementById("waktuMulaiUser").value = "";
+    document.getElementById("waktuKembaliUser").value = "";
+
+    renderRiwayatUserTable();
+}
+    // Fungsi render yang memperbaiki tampilan tanggal
+    function renderRiwayatUserTable() {
+    const tableBody = document.getElementById("tableRiwayatUser");
+    if (!tableBody) return;
+
+    const dataLaporan = JSON.parse(localStorage.getItem("peminjaman")) || [];
+
+    tableBody.innerHTML = "";
+
+    dataLaporan.forEach((item, index) => {
+
+        // ✅ INI TARUH DI SINI (WAJIB DI DALAM forEach)
+        const status = (item.status || "").toUpperCase();
+
+        let bg =
+            status === "DISETUJUI" ? "green" :
+            status === "DITOLAK" ? "red" :
+            "orange";
+
+        // lanjut render tabel
+        tableBody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.barang ?? '-'}</td>
+
+                <td>
+                    ${item.tanggalAmbil ?? '-'} ${item.jamAmbil ?? ''}
+                </td>
+
+                <td>
+                    ${item.tanggalKembali ?? '-'} ${item.jamKembali ?? ''}
+                </td>
+
+                <td>
+                    <span style="
+                        padding:4px 8px;
+                        border-radius:6px;
+                        color:white;
+                        background:${bg};
+                    ">
+                        ${item.status ?? 'MENUNGGU'}
+                    </span>
+                </td>
+            </tr>
+        `;
+    });
+}
+    window.onload = function() {
+        renderRiwayatUserTable();
+    };
+  window.addEventListener("DOMContentLoaded", () => {
+    const role = localStorage.getItem("sessionRole");
+
+    if (role !== "user") {
+        window.location.href = "LoginUser.html";
+    } else {
+        renderRiwayatUserTable();
+    }
+});
+</script>
+</body>
+</html>
