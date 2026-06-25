@@ -2340,3 +2340,154 @@ body.dark-mode * {
 body {
     transition: background 0.3s ease, color 0.3s ease;
 }
+.login-body {
+    background: linear-gradient(135deg, #7a0000, #3b0000);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.login-body {
+    background: linear-gradient(135deg, #7a0000, #3b0000);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    text-align: center;
+}
+.login-body {
+    background: maroon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 10px;
+    background: maroon;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+.main {
+    margin-left: 260px;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+.sidebar {
+    width: 260px;
+    position: fixed;
+    height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+}
+.info-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.card {
+    flex: 1;
+    min-width: 200px;
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.brand-logo {
+    max-width: 40px;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .brand-text {
+        font-size: 14px;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+}

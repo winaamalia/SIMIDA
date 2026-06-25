@@ -568,36 +568,9 @@ function loginAdmin() {
     if (username === "admin" && password === "admin") {
         localStorage.setItem("sessionRole", "admin");
 
-        window.location.href = "dashboard.html";
+        window.location.href = "index.html"; // FIX INI
     } else {
         alert("login gagal");
-    }
-}
-function cekLogin() {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if (!username || !password) {
-        Swal.fire("Isi username & password");
-        return;
-    }
-
-    if (username === "admin" && password === "admin") {
-        localStorage.setItem("sessionRole", "admin");
-
-        Swal.fire({
-            icon: "success",
-            title: "Login berhasil",
-            timer: 1000,
-            showConfirmButton: false
-        });
-
-        setTimeout(() => {
-            window.location.href = "dashboard.html";
-        }, 1000);
-
-    } else {
-        Swal.fire("Login gagal");
     }
 }
 function toggleDarkMode() {
@@ -630,3 +603,16 @@ function applyTheme(theme = localStorage.getItem("theme") || "light") {
 window.addEventListener("DOMContentLoaded", () => {
     applyTheme();
 });
+function cekLogin() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (username === "admin" && password === "admin") {
+        localStorage.setItem("sessionRole", "admin");
+        window.location.href = "index.html"; // FIX UTAMA
+    } else {
+        alert("Login gagal");
+    }
+}
+
+window.cekLogin = cekLogin;
