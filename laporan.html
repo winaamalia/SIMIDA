@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan - SIMIDA</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        .sidebar ul li a i { margin-right: 10px; width: 20px; text-align: center; }
+        .action-group { margin: 20px 0; display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+        .form-card { display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-weight: 600; color: #4a0404; font-size: 14px; }
+        .input-control { padding: 10px; width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid #ccc; }
+        .btn { cursor: pointer; padding: 10px 15px; border-radius: 8px; border: none; font-weight: bold; color: white; display: flex; align-items: center; gap: 8px; }
+        .btn-maroon { background-color: maroon; }
+        .btn-dark { background-color: #555; }
+        .btn-pdf { background-color: #e74c3c; }
+    </style>
+</head>
+
+<body>
+<script>
+    if (localStorage.getItem("theme") === "dark"){ document.body.classList.add("dark-mode"); }
+</script>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <img src="logo%20desa%20dayeuhkolot.png" alt="Logo Desa" class="brand-logo">
+        <span class="brand-text">SIMIDA</span>
+    </div>
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 5px 20px 15px 20px;">
+    <ul>
+        <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="barang.html"><i class="fa-solid fa-box"></i> Data Barang</a></li>
+        <li><a href="peminjaman.html"><i class="fa-solid fa-clipboard-list"></i> Peminjaman</a></li>
+        <li><a href="laporan.html" class="active"><i class="fa-solid fa-chart-simple"></i> Laporan</a></li>
+        <li class="logout-item"><a href="#" onclick="logout(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+</div>
+
+<div class="main">
+    <div class="topbar"><h2>Laporan Inventaris Desa</h2></div>
+
+    <div id="formTambahLaporan" class="form-card">
+        <h3 style="color: maroon; margin-top: 0;"><i class="fa-solid fa-file-circle-plus"></i> Tambah Laporan</h3>
+        <div class="input-group">
+            <label>Nama Peminjam</label>
+            <input type="text" id="namaLaporan" class="input-control" placeholder="Nama peminjam">
+        </div>
+        <div class="input-group">
+            <label>Nama Barang</label>
+            <input type="text" id="barangLaporan" class="input-control" placeholder="Nama barang">
+        </div>
+        <div class="input-group">
+            <label>Jadwal Ambil</label>
+            <input type="datetime-local" id="tglAmbilLaporan" class="input-control">
+        </div>
+        <div class="input-group">
+            <label>Jadwal Kembali</label>
+            <input type="datetime-local" id="tglKembaliLaporan" class="input-control">
+        </div>
+        <div class="input-group">
+            <label>Status</label>
+            <select id="statusLaporan" class="input-control">
+                <option value="Selesai">Selesai</option>
+                <option value="Disetujui">Disetujui</option>
+                <option value="Ditolak">Ditolak</option>
+                <option value="Menunggu">Menunggu</option>
+            </select>
+        </div>
+        <button class="btn btn-maroon" onclick="tambahLaporanManual()">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan Laporan
+        </button>
+    </div>
+
+    <div class="action-group">
+        <button class="btn btn-dark"onclick="toggleFormLaporan()">
+            <i class="fa-solid fa-plus"></i> Tambah Laporan
+        </button>
+        <button class="btn btn-pdf" onclick="exportPDF()">
+            <i class="fa-solid fa-file-pdf"></i> Export PDF
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th style="width: 60px;">No</th>
+                <th>Nama</th>
+                <th>Barang</th>
+                <th>Jadwal Ambil</th>
+                <th>Jadwal Kembali</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+            </thead>
+            <tbody id="tableLaporan"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderLaporanTable();
+    });
+</script>
+</body>
+</html>
